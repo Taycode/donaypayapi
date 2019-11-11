@@ -4,6 +4,7 @@ crypto==1.4.1
 Django==2.2.6
 djangorestframework==3.10.3
 get==2019.4.13
+gunicorn==20.0.0
 idna==2.8
 Naked==0.1.31
 post==2019.4.13
