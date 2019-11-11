@@ -1,0 +1,1 @@
+web: gunicorn donaypay.wsgi --log-file -
