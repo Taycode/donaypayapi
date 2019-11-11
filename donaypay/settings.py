@@ -44,13 +44,15 @@ INSTALLED_APPS = [
     'account',
     'donaypage',
     'rest_framework',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -154,3 +156,5 @@ load_dotenv(dotenv_path=env_path)
 
 flutterwave_public_key = os.environ['flutterwave_public_key']
 flutterwave_secret_key = os.environ['flutterwave_secret_key']
+
+CORS_ORIGIN_ALLOW_ALL = True
