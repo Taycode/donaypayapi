@@ -1,7 +1,9 @@
 from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.models import User
+from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from .models import UserBankDetails
 
 
 class CreateUserSerializer(ModelSerializer):
@@ -40,3 +42,9 @@ class LoginSerializer(ModelSerializer):
             return data
         else:
             return None
+
+
+class UserBankDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserBankDetails
+        fields = '__all__'

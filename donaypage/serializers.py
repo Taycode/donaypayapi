@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from .models import DonayPage, DonayReceivedTransactions
+from account.models import UserBankDetails
 from tayflutterwave.tay_flutterwave import Flutterwave
 from donaypay.settings import flutterwave_secret_key, flutterwave_public_key
 
@@ -58,3 +59,5 @@ class ConfirmPaymentSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         pass
+
+

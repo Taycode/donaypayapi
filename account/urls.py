@@ -4,7 +4,8 @@ from .views import (
     SignUpView,
     login_view,
     index,
-    logout_view
+    logout_view,
+    UserBankDetailView
 )
 urlpatterns = [
     path('login/', LoginView.as_view()),
@@ -12,4 +13,5 @@ urlpatterns = [
     path('', login_view, name='normal_login'),
     path('index/', index, name='index'),
     path('logout/', logout_view, name='logout'),
+    path('bank/', UserBankDetailView.as_view())
 ]

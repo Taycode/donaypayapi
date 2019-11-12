@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from .serializers import CreateUserSerializer, LoginSerializer
+from account.serializers import UserBankDetailsSerializer
 from .forms import LoginForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
@@ -75,4 +76,19 @@ class LoginView(APIView):
 
         else:
             serializer.errors.update({'status': 'fail'})
+            return Response(serializer.errors, status=status.HTTP_200_OK)
+
+
+class UserBankDetailView(APIView):
+    serializer_class = UserBankDetailsSerializer
+
+    @staticmethod
+    def post(request):
+        serializer = UserBankDetailsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            serializer.data.update({{'status': 'success'}})
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            serializer.errors.update({{'status': 'fail'}})
             return Response(serializer.errors, status=status.HTTP_200_OK)

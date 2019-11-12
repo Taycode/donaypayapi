@@ -61,9 +61,11 @@ class CollectPayment(APIView):
                     serializer.save()
                     return Response(res, status=status.HTTP_200_OK)
                 else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    serializer.errors.update({'status': 'fail'})
+                    return Response(serializer.errors, status=status.HTTP_200_OK)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            serializer.errors.update({'status': 'fail'})
+            return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
 class VerifyPayment(APIView):
@@ -91,12 +93,14 @@ class VerifyPayment(APIView):
                 serializer = DonayReceivedTransactionsSerializer(instance=donay_received_transaction, data=data)
                 if serializer.is_valid():
                     serializer.save()
+                    serializer.data.update({'status': 'success'})
                     return Response(serializer.data, status=status.HTTP_200_OK)
                 else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                    serializer.errors.update({'status': 'fail'})
+                    return Response(serializer.errors, status=status.HTTP_200_OK)
 
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
 class ViewAllDonayPages(APIView):
