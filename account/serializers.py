@@ -36,10 +36,7 @@ class LoginSerializer(ModelSerializer):
         user = authenticate(username=username, password=password)
         if user is not None:
             token = user.auth_token.key
-            data = {'token': token, 'username': username}
+            data = {'status': 'success', 'token': token, 'username': username}
             return data
         else:
-
             return None
-
-

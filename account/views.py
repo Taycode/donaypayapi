@@ -34,7 +34,7 @@ class LoginView(APIView):
                 return Response(user, status=status.HTTP_200_OK)
 
             else:
-                data = {'error': 'wrong credentials'}
+                data = {'status': 'fail', 'error': 'wrong credentials'}
                 return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
         else:

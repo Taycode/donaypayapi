@@ -1,8 +1,13 @@
 from rest_framework.response import Response
-from .serializers import DonayPageSerializer, PaymentFieldSerializer, ConfirmPaymentSerializer
+from .serializers import (
+    DonayPageSerializer,
+    PaymentFieldSerializer,
+    ConfirmPaymentSerializer,
+    DonayReceivedTransactionsSerializer
+)
 from rest_framework.views import APIView
 from rest_framework import status
-from .models import DonayPage
+from .models import DonayPage, DonayReceivedTransactions
 
 
 class CreateDonayPage(APIView):
@@ -13,9 +18,9 @@ class CreateDonayPage(APIView):
         serializer = DonayPageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data.update({'status': 'success'}), status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors.update({'status': 'fail'}), status=status.HTTP_200_OK)
 
 
 class ViewDonayPage(APIView):
@@ -33,11 +38,24 @@ class CollectPayment(APIView):
     serializer_class = PaymentFieldSerializer
 
     @staticmethod
-    def post(request):
+    def post(request, pk):
         serializer = PaymentFieldSerializer(data=request.data)
         if serializer.is_valid():
+            donaypage_instance = DonayPage.objects.get(pk=pk)
             res = serializer.save()
-            return Response(res, status=status.HTTP_200_OK)
+            if res['status'] == 'success':
+                data = {
+                    'donaypage': donaypage_instance.pk,
+                    'reference': res['data']['txRef'],
+                    'amount': res['data']['amount'],
+                    'sender_name': serializer.initial_data['firstname'] + ' ' + serializer.initial_data['lastname']
+                }
+                serializer = DonayReceivedTransactionsSerializer(data=data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(res, status=status.HTTP_200_OK)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -46,10 +64,27 @@ class VerifyPayment(APIView):
     serializer_class = ConfirmPaymentSerializer
 
     @staticmethod
-    def post(request):
-        serializer = PaymentFieldSerializer(data=request.data)
+    def post(request, pk):
+        serializer = ConfirmPaymentSerializer(data=request.data)
         if serializer.is_valid():
             res = serializer.save()
-            return Response(res, status=status.HTTP_200_OK)
+            if res['status'] == 'success':
+                tx_ref = res['data']['tx']['txRef']
+                donay_received_transaction = DonayReceivedTransactions.objects.get(reference=tx_ref)
+
+                serializer = DonayReceivedTransactionsSerializer(donay_received_transaction)
+                data = {
+                    'donaypage': serializer.data['donaypage'],
+                    'reference': serializer.data['reference'],
+                    'amount': serializer.data['amount'],
+                    'sender_name': serializer.data['sender_name']
+                }
+                serializer = DonayReceivedTransactionsSerializer(instance=donay_received_transaction, data=data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

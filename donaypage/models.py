@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 class DonayPage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
     title = models.CharField(max_length=30)
-    reached_amount = models.BigIntegerField()
+    reached_amount = models.BigIntegerField(default=0)
     expected_amount = models.BigIntegerField()
     description = models.CharField(max_length=400)
 
@@ -19,6 +19,7 @@ class DonayReceivedTransactions(models.Model):
     reference = models.CharField(max_length=30, blank=True)
     amount = models.BigIntegerField(default=0)
     sender_name = models.CharField(max_length=50, blank=True)
+    status = models.BooleanField(default=False)
 
 
 
