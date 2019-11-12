@@ -1,5 +1,6 @@
 certifi==2019.9.11
 chardet==3.0.4
+cloudinary==1.18.2
 crypto==1.4.1
 Django==2.2.6
 django-cors-headers==3.1.1
@@ -7,6 +8,7 @@ djangorestframework==3.10.3
 get==2019.4.13
 gunicorn==20.0.0
 idna==2.8
+mock==3.0.5
 Naked==0.1.31
 post==2019.4.13
 public==2019.4.13
@@ -18,6 +20,7 @@ query-string==2019.4.13
 request==2019.4.13
 requests==2.22.0
 shellescape==3.4.1
+six==1.13.0
 sqlparse==0.3.0
 tayflutterwave==0.1
 urllib3==1.25.6

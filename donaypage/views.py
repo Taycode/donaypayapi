@@ -40,6 +40,7 @@ class ViewDonayPage(APIView):
 
 class CollectPayment(APIView):
     serializer_class = PaymentFieldSerializer
+    permission_classes = ()
 
     @staticmethod
     def post(request, pk):
@@ -66,6 +67,7 @@ class CollectPayment(APIView):
 
 class VerifyPayment(APIView):
     serializer_class = ConfirmPaymentSerializer
+    permission_classes = ()
 
     @staticmethod
     def post(request, pk):
@@ -94,3 +96,14 @@ class VerifyPayment(APIView):
 
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ViewAllDonayPages(APIView):
+    serializer_class = DonayPageSerializer
+    permission_classes = ()
+
+    @staticmethod
+    def get(request):
+        data = DonayPage.objects.all()
+        serializer = DonayPageSerializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
