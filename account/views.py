@@ -15,9 +15,9 @@ class SignUpView(APIView):
         serializer = CreateUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data.update({'status': 'success'}), status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors.update({'status': 'fail'}), status=status.HTTP_200_OK)
 
 
 class LoginView(APIView):
@@ -35,7 +35,7 @@ class LoginView(APIView):
 
             else:
                 data = {'status': 'fail', 'error': 'wrong credentials'}
-                return Response(data, status=status.HTTP_400_BAD_REQUEST)
+                return Response(data, status=status.HTTP_200_OK)
 
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors.update({'status': 'fail'}), status=status.HTTP_200_OK)
