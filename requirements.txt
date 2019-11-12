@@ -25,4 +25,3 @@ sqlparse==0.3.0
 tayflutterwave==0.1
 urllib3==1.25.6
 whitenoise==4.1
-pip==19.0.3
