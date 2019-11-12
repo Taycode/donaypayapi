@@ -12,6 +12,7 @@ class DonayPage(models.Model):
     beneficiary = models.CharField(max_length=50, blank=True)
     description = models.CharField(max_length=400)
     image = CloudinaryField('image', blank=True)
+    percentage = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -29,10 +30,13 @@ class DonayReceivedTransactions(models.Model):
 
 
 def add_to_reached_amount(sender, **kwargs):
+    donaypage_instance = kwargs['instance'].donaypage
     if not kwargs['created']:
         if kwargs['instance'].status:
-            kwargs['instance'].donaypage.reached_amount += kwargs['instance'].amount
-            kwargs['instance'].donaypage.save()
+            donaypage_instance.reached_amount += kwargs['instance'].amount
+            percentage = (donaypage_instance.reached_amount / donaypage_instance.expected_amount) * 100
+            donaypage_instance.percentage = int(round(percentage))
+            donaypage_instance.save()
 
 
 post_save.connect(add_to_reached_amount, DonayReceivedTransactions)

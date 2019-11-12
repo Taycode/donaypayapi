@@ -16,7 +16,7 @@ class DonayPageSerializer(ModelSerializer):
 class DonayPageCreateSerializer(ModelSerializer):
     class Meta:
         model = DonayPage
-        exclude = ['reached_amount']
+        exclude = ['reached_amount', 'percentage']
 
 
 class DonayReceivedTransactionsSerializer(ModelSerializer):

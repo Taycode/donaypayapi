@@ -4,6 +4,7 @@ main3.py
 main4.py
 main0.py
 
+db.sqlite3
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
