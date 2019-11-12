@@ -13,6 +13,12 @@ class DonayPageSerializer(ModelSerializer):
         fields = '__all__'
 
 
+class DonayPageCreateSerializer(ModelSerializer):
+    class Meta:
+        model = DonayPage
+        exclude = ['reached_amount']
+
+
 class DonayReceivedTransactionsSerializer(ModelSerializer):
     class Meta:
         model = DonayReceivedTransactions

@@ -3,7 +3,8 @@ from .serializers import (
     DonayPageSerializer,
     PaymentFieldSerializer,
     ConfirmPaymentSerializer,
-    DonayReceivedTransactionsSerializer
+    DonayReceivedTransactionsSerializer,
+    DonayPageCreateSerializer
 )
 from rest_framework.views import APIView
 from rest_framework import status
@@ -12,12 +13,12 @@ from rest_framework.parsers import JSONParser, MultiPartParser
 
 
 class CreateDonayPage(APIView):
-    serializer_class = DonayPageSerializer
+    serializer_class = DonayPageCreateSerializer
     parser_classes = [JSONParser, MultiPartParser]
 
     @staticmethod
     def post(request):
-        serializer = DonayPageSerializer(data=request.data)
+        serializer = DonayPageCreateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
             serializer.data.update({'status': 'success'})
