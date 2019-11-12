@@ -8,19 +8,23 @@ from .serializers import (
 from rest_framework.views import APIView
 from rest_framework import status
 from .models import DonayPage, DonayReceivedTransactions
+from rest_framework.parsers import JSONParser, MultiPartParser
 
 
 class CreateDonayPage(APIView):
     serializer_class = DonayPageSerializer
+    parser_classes = [JSONParser, MultiPartParser]
 
     @staticmethod
     def post(request):
         serializer = DonayPageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
-            return Response(serializer.data.update({'status': 'success'}), status=status.HTTP_201_CREATED)
+            serializer.data.update({'status': 'success'})
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors.update({'status': 'fail'}), status=status.HTTP_200_OK)
+            serializer.errors.update({'status': 'fail'})
+            return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
 class ViewDonayPage(APIView):
@@ -65,6 +69,7 @@ class VerifyPayment(APIView):
 
     @staticmethod
     def post(request, pk):
+        donaypage_instance = DonayPage.objects.get(pk=pk)
         serializer = ConfirmPaymentSerializer(data=request.data)
         if serializer.is_valid():
             res = serializer.save()
@@ -74,10 +79,11 @@ class VerifyPayment(APIView):
 
                 serializer = DonayReceivedTransactionsSerializer(donay_received_transaction)
                 data = {
-                    'donaypage': serializer.data['donaypage'],
+                    'donaypage': donaypage_instance.id,
                     'reference': serializer.data['reference'],
                     'amount': serializer.data['amount'],
-                    'sender_name': serializer.data['sender_name']
+                    'sender_name': serializer.data['sender_name'],
+                    'status': True
                 }
                 serializer = DonayReceivedTransactionsSerializer(instance=donay_received_transaction, data=data)
                 if serializer.is_valid():

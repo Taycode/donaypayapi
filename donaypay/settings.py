@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 from pathlib import Path  # python3 only
 from dotenv import load_dotenv
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -45,7 +48,8 @@ INSTALLED_APPS = [
     'donaypage',
     'rest_framework',
     'rest_framework.authtoken',
-    'corsheaders'
+    'corsheaders',
+    'cloudinary'
 ]
 
 MIDDLEWARE = [
@@ -158,3 +162,10 @@ flutterwave_public_key = os.environ['flutterwave_public_key']
 flutterwave_secret_key = os.environ['flutterwave_secret_key']
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+cloudinary.config(
+  cloud_name="taycode",
+  api_key="281756124596349",
+  api_secret="Ddcexe8-O9k7MZdmZYrupTV7Lhk"
+)

@@ -49,9 +49,11 @@ class SignUpView(APIView):
         serializer = CreateUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data.update({'status': 'success'}), status=status.HTTP_201_CREATED)
+            serializer.data.update({'status': 'success'})
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors.update({'status': 'fail'}), status=status.HTTP_200_OK)
+            serializer.errors.update({'status': 'fail'})
+            return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
 class LoginView(APIView):
@@ -72,4 +74,5 @@ class LoginView(APIView):
                 return Response(data, status=status.HTTP_200_OK)
 
         else:
-            return Response(serializer.errors.update({'status': 'fail'}), status=status.HTTP_200_OK)
+            serializer.errors.update({'status': 'fail'})
+            return Response(serializer.errors, status=status.HTTP_200_OK)
