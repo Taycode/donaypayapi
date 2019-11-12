@@ -169,3 +169,11 @@ cloudinary.config(
   api_key="281756124596349",
   api_secret="Ddcexe8-O9k7MZdmZYrupTV7Lhk"
 )
+
+import dj_database_url
+
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+import django_heroku
+django_heroku.settings(locals())
