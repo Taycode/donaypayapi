@@ -158,8 +158,8 @@ load_dotenv(verbose=True)
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 
-flutterwave_public_key = os.environ['flutterwave_public_key']
-flutterwave_secret_key = os.environ['flutterwave_secret_key']
+FLUTTERWAVE_PUBLIC_KEY = os.environ['flutterwave_public_key']
+FLUTTERWAVE_SECRET_KEY = os.environ['flutterwave_secret_key']
 
 CORS_ORIGIN_ALLOW_ALL = True
 
