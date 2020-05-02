@@ -1,9 +1,12 @@
 from rest_framework.serializers import ModelSerializer
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from .models import UserBankDetails
+
+
+User = get_user_model()
 
 
 class CreateUserSerializer(ModelSerializer):
@@ -30,18 +33,16 @@ class LoginSerializer(ModelSerializer):
         model = User
         fields = ['email', 'password']
 
-    @staticmethod
-    def authenticate_user(validated_data):
-        username = validated_data['email'].lower()
-        password = validated_data['password']
+    def authenticate_user(self, validated_data):
+        username = self.validated_data['email'].lower()
+        password = self.validated_data['password']
 
         user = authenticate(username=username, password=password)
         if user is not None:
             token = user.auth_token.key
             data = {'status': 'success', 'token': token, 'username': username}
             return data
-        else:
-            return None
+        return None
 
 
 class UserBankDetailsSerializer(serializers.ModelSerializer):

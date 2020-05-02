@@ -1,16 +1,17 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.conf import settings
 from cloudinary.models import CloudinaryField
 from tayflutterwave.tay_flutterwave import Flutterwave
-from donaypay.settings import flutterwave_secret_key, flutterwave_public_key
 from account.models import UserBankDetails
+from .utils import get_flutterwave_sdk
 
-flutterwave = Flutterwave(public_key=flutterwave_public_key, secret_key=flutterwave_secret_key)
+
+flutterwave = get_flutterwave_sdk()
 
 
 class DonayPage(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True)
     title = models.CharField(max_length=30)
     reached_amount = models.BigIntegerField(default=0)
     expected_amount = models.BigIntegerField()

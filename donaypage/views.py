@@ -1,4 +1,8 @@
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.parsers import JSONParser, MultiPartParser
+from .models import DonayPage, DonayReceivedTransactions
 from .serializers import (
     DonayPageSerializer,
     PaymentFieldSerializer,
@@ -6,10 +10,6 @@ from .serializers import (
     DonayReceivedTransactionsSerializer,
     DonayPageCreateSerializer
 )
-from rest_framework.views import APIView
-from rest_framework import status
-from .models import DonayPage, DonayReceivedTransactions
-from rest_framework.parsers import JSONParser, MultiPartParser
 
 
 class CreateDonayPage(APIView):
@@ -23,9 +23,8 @@ class CreateDonayPage(APIView):
             serializer.save(user=request.user)
             serializer.data.update({'status': 'success'})
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            serializer.errors.update({'status': 'fail'})
-            return Response(serializer.errors, status=status.HTTP_200_OK)
+        serializer.errors.update({'status': 'fail'})
+        return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
 class ViewDonayPage(APIView):
@@ -54,18 +53,19 @@ class CollectPayment(APIView):
                     'donaypage': donaypage_instance.pk,
                     'reference': res['data']['txRef'],
                     'amount': res['data']['amount'],
-                    'sender_name': serializer.initial_data['firstname'] + ' ' + serializer.initial_data['lastname']
+                    'sender_name': '{} {}'.format(
+                        serializer.initial_data['firstname'],
+                        serializer.initial_data['lastname']
+                    )
                 }
                 serializer = DonayReceivedTransactionsSerializer(data=data)
                 if serializer.is_valid():
                     serializer.save()
                     return Response(res, status=status.HTTP_200_OK)
-                else:
-                    serializer.errors.update({'status': 'fail'})
-                    return Response(serializer.errors, status=status.HTTP_200_OK)
-        else:
-            serializer.errors.update({'status': 'fail'})
-            return Response(serializer.errors, status=status.HTTP_200_OK)
+                serializer.errors.update({'status': 'fail'})
+                return Response(serializer.errors, status=status.HTTP_200_OK)
+        serializer.errors.update({'status': 'fail'})
+        return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
 class VerifyPayment(APIView):
@@ -95,12 +95,9 @@ class VerifyPayment(APIView):
                     serializer.save()
                     serializer.data.update({'status': 'success'})
                     return Response(serializer.data, status=status.HTTP_200_OK)
-                else:
-                    serializer.errors.update({'status': 'fail'})
-                    return Response(serializer.errors, status=status.HTTP_200_OK)
-
-        else:
-            return Response(serializer.errors, status=status.HTTP_200_OK)
+                serializer.errors.update({'status': 'fail'})
+                return Response(serializer.errors, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_200_OK)
 
 
 class ViewAllDonayPages(APIView):

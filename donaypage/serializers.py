@@ -1,11 +1,11 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
-from .models import DonayPage, DonayReceivedTransactions
 from account.models import UserBankDetails
 from tayflutterwave.tay_flutterwave import Flutterwave
-from donaypay.settings import flutterwave_secret_key, flutterwave_public_key
+from .models import DonayPage, DonayReceivedTransactions
+from .utils import get_flutterwave_sdk
 
-flutterwave = Flutterwave(flutterwave_public_key, flutterwave_secret_key)
+flutterwave = get_flutterwave_sdk()
 
 
 class DonayPageSerializer(ModelSerializer):
@@ -44,9 +44,6 @@ class PaymentFieldSerializer(serializers.Serializer):
     def create(self, validated_data):
         return flutterwave.pay_via_card(validated_data)
 
-    def update(self, instance, validated_data):
-        pass
-
 
 class ConfirmPaymentSerializer(serializers.Serializer):
     transaction_reference = serializers.CharField()
@@ -56,8 +53,3 @@ class ConfirmPaymentSerializer(serializers.Serializer):
         transaction_reference = validated_data['transaction_reference']
         otp = validated_data['otp']
         return flutterwave.validate_payment_with_card(transaction_reference, otp)
-
-    def update(self, instance, validated_data):
-        pass
-
-
