@@ -4,11 +4,10 @@ from django.conf import settings
 from cloudinary.models import CloudinaryField
 from tayflutterwave.tay_flutterwave import Flutterwave
 from account.models import UserBankDetails
+from .utils import get_flutterwave_sdk
 
-flutterwave = Flutterwave(
-    public_key=settings.FLUTTERWAVE_PUBLIC_KEY,
-    secret_key=settings.FLUTTERWAVE_SECRET_KEY
-)
+
+flutterwave = get_flutterwave_sdk()
 
 
 class DonayPage(models.Model):

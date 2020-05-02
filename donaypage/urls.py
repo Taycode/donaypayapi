@@ -5,7 +5,7 @@ from .views import (
     CollectPayment,
     VerifyPayment,
     ViewAllDonayPages
-    )
+)
 
 
 urlpatterns = [

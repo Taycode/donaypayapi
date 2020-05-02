@@ -43,13 +43,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',
-    'account',
-    'donaypage',
+    
+    # THIRD PARTY
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'cloudinary'
+    'cloudinary',
+
+    # YOUR APPS
+    'account',
+    'donaypage',
 ]
 
 MIDDLEWARE = [
